@@ -1,4 +1,4 @@
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZetraHub/ProjectsmashScript/refs/heads/main/text%205.txt"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
@@ -13,7 +13,7 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-     Info = Window:AddTab({ Title = "▎ Info", Icon = "scroll" }),
+     Info = Window:AddTab({ Title = "▎ INFO", Icon = "scroll" }),
     Combat = Window:AddTab({ Title = "▎ COMBAT", Icon = "swords" }),
     Others = Window:AddTab({ Title = "▎ OTHERS", Icon = "star" }),
     Utilities = Window:AddTab({ Title = "▎ UTILITIES", Icon = "target" }),
@@ -685,3 +685,12 @@ end)
 if AntiAFKEnabled then
     spawn(AntiAFK)
 end
+
+local AutoAttackButton = Tabs.Info:AddButton({
+    Title = "Auto Attack",
+    Callback = function()
+        -- Lógica do Auto Attack, se desejado
+        print("Auto Attack ativado")
+    end,
+    Interactable = false, -- Defina como false se não quiser que seja clicável
+})
