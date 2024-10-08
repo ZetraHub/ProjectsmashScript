@@ -13,7 +13,7 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    AutoFarm = Window:AddTab({ Title = "▎ COMBAT", Icon = "swords" }),
+    Combat = Window:AddTab({ Title = "▎ COMBAT", Icon = "swords" }),
     Others = Window:AddTab({ Title = "▎ OTHERS", Icon = "star" }),
     Utilities = Window:AddTab({ Title = "▎ UTILITIES", Icon = "target" }),
     Settings = Window:AddTab({ Title = "▎ UI SETTINGS", Icon = "settings" })
@@ -29,7 +29,7 @@ do
         Duration = 5
     })
 
-local Toggle = Tabs.AutoFarm:AddToggle("AutoFarmPlayerToggle", { 
+local Toggle = Tabs.Combat:AddToggle("AutoFarmPlayerToggle", { 
     Title = "Kill Farm (Random Players)", 
     Default = false 
 })
@@ -276,7 +276,7 @@ end)
 
 
 -- Adiciona um Toggle (interruptor) para Anti Fling
-local FlingToggle = Tabs.AutoFarm:AddToggle("AntiFlingToggle", { 
+local FlingToggle = Tabs.Combat:AddToggle("AntiFlingToggle", { 
     Title = "Anti Fling", 
     Default = false 
 })
@@ -315,9 +315,9 @@ game:GetService("RunService").Heartbeat:Connect(function()
     end
 end)
 
-local ESPSection = Tabs.AutoFarm:AddSection("ESP")
+local ESPSection = Tabs.Combat:AddSection("ESP")
 
-local ESPFarmToggle = Tabs.AutoFarm:AddToggle("ESP", { 
+local ESPFarmToggle = Tabs.Combat:AddToggle("ESP", { 
     Title = "Show Name & Distance", 
     Default = false 
 })
@@ -402,7 +402,7 @@ ESPFarmToggle:OnChanged(function()
 end)
 
 -- Adiciona um Toggle (interruptor) para ESP All Players Highlight
-local ESPToggle = Tabs.AutoFarm:AddToggle("ESPPlayersToggle", { 
+local ESPToggle = Tabs.Combat:AddToggle("ESPPlayersToggle", { 
     Title = "ESP All Players", 
     Default = false 
 })
@@ -496,9 +496,9 @@ game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):C
     end
 end)
 
-local EXTRASection = Tabs.AutoFarm:AddSection("EXTRA")
+local EXTRASection = Tabs.Combat:AddSection("EXTRA")
 
-local HitboxToggle = Tabs.AutoFarm:AddToggle("HitboxToggle", { 
+local HitboxToggle = Tabs.Combat:AddToggle("HitboxToggle", { 
     Title = "Hitbox Aura", 
     Default = false 
 })
@@ -580,7 +580,7 @@ HitboxToggle:OnChanged(function(value)
 end)
 
 -- Adiciona um Toggle (interruptor) para No Dash Cooldown
-local DashToggle = Tabs.AutoFarm:AddToggle("NoDashCooldownToggle", { 
+local DashToggle = Tabs.Combat:AddToggle("NoDashCooldownToggle", { 
     Title = "No Dash Cooldown", 
     Default = false 
 })
@@ -610,7 +610,7 @@ game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):C
     end
 end)
 
-local AutoDeployToggle = Tabs.AutoFarm:AddToggle("AutoDeployToggle", { 
+local AutoDeployToggle = Tabs.Combat:AddToggle("AutoDeployToggle", { 
     Title = "Auto Deploy", 
     Default = false -- Default como true
 })
@@ -685,7 +685,7 @@ if AntiAFKEnabled then
     spawn(AntiAFK)
 end
 
-local Toggle = Tabs.AutoFarm:AddToggle("AutoAttackToggle", { 
+local Toggle = Tabs.Combat:AddToggle("AutoAttackToggle", { 
     Title = "Auto Attack (Melee)", 
     Default = false 
 })
