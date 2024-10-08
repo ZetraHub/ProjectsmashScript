@@ -29,6 +29,35 @@ do
         Duration = 5
     })
 
+local Toggle = Tabs.AutoFarm:AddToggle("AutoAttackToggle", { 
+    Title = "Auto Attack (Melee)", 
+    Default = false 
+})
+
+local meleeButton = game.Players.LocalPlayer.PlayerGui:WaitForChild("SeuGUI"):WaitForChild("Melee") -- Substitua "SeuGUI" pelo nome correto da sua GUI
+
+local function atacarJogadoresAleatorios()
+    while Toggle.Value do
+        wait(1) -- Ajuste o tempo entre os ataques conforme necessário
+        local players = game.Players:GetPlayers()
+        
+        for _, player in ipairs(players) do
+            if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") then
+                -- Simula o clique no botão "Melee"
+                meleeButton.MouseButton1Click:Fire() -- Chama o evento do botão Melee
+                print("Atacando: " .. player.Name)
+                wait(0.5) -- Aguarda um pequeno tempo antes de atacar novamente
+            end
+        end
+    end
+end
+
+Toggle:OnChanged(function(newValue)
+    if newValue then
+        atacarJogadoresAleatorios()
+    end
+end)
+
 local Toggle = Tabs.AutoFarm:AddToggle("AutoFarmPlayerToggle", { 
     Title = "Kill Farm (Random Players)", 
     Default = false 
