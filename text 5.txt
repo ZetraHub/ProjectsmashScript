@@ -1,4 +1,4 @@
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZetraHub/ProjectsmashScript/refs/heads/main/text%205.txt"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
@@ -631,6 +631,95 @@ game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):C
             -- Aqui você deve modificar o código do seu dash para ignorar o cooldown
             -- Isso pode variar dependendo de como o dash é implementado no seu jogo
         end
+    end
+end)
+
+local HitboxToggle = Tabs.AutoFarm:AddToggle("HitboxToggle", { 
+    Title = "Hitbox para Jogadores", 
+    Default = false 
+})
+
+local HitboxSlider = Tabs.AutoFarm:AddSlider("HitboxSlider", {
+    Title = "Tamanho da Hitbox",
+    Min = 10, 
+    Max = 50, 
+    Default = 10, 
+    Decimals = 1
+})
+
+local player = game.Players.LocalPlayer
+local hitboxes = {} -- Tabela para armazenar hitboxes dos jogadores
+local hitboxRadius = HitboxSlider.Value -- Tamanho inicial da hitbox
+local auraColor = Color3.new(1, 0, 0) -- Cor da aura (vermelho)
+
+-- Função para criar hitbox para cada jogador (exceto o próprio jogador)
+local function createHitboxForPlayers()
+    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+        if otherPlayer ~= player then
+            local character = otherPlayer.Character or otherPlayer.CharacterAdded:Wait()
+
+            -- Criar a parte da hitbox para outros jogadores
+            local hitbox = Instance.new("Part")
+            hitbox.Size = Vector3.new(hitboxRadius * 2, hitboxRadius * 2, hitboxRadius * 2)
+            hitbox.Transparency = 1 -- Tornar invisível
+            hitbox.Anchored = true
+            hitbox.CanCollide = false
+            hitbox.Parent = workspace
+
+            -- Criar a aura
+            local aura = Instance.new("Part")
+            aura.Size = Vector3.new(hitboxRadius * 2, hitboxRadius * 2, hitboxRadius * 2)
+            aura.Transparency = 0.5 -- Transparência da aura
+            aura.Anchored = true
+            aura.CanCollide = false
+            aura.BrickColor = BrickColor.new(auraColor)
+            aura.Material = Enum.Material.Neon
+            aura.Parent = workspace
+
+            -- Atualizar posição da hitbox e aura conforme o movimento do jogador
+            local function updateHitboxPosition()
+                if character and character:FindFirstChild("HumanoidRootPart") then
+                    hitbox.Position = character.HumanoidRootPart.Position
+                    aura.Position = hitbox.Position
+                end
+            end
+
+            game:GetService("RunService").Heartbeat:Connect(updateHitboxPosition)
+
+            -- Adicionar a hitbox à tabela
+            table.insert(hitboxes, {hitbox = hitbox, aura = aura, player = otherPlayer})
+        end
+    end
+end
+
+-- Função para remover todas as hitboxes
+local function removeHitboxes()
+    for _, data in pairs(hitboxes) do
+        if data.hitbox then data.hitbox:Destroy() end
+        if data.aura then data.aura:Destroy() end
+    end
+    hitboxes = {} -- Limpar a tabela
+end
+
+-- Atualizar tamanho da hitbox ao mover o slider
+HitboxSlider:OnChanged(function(value)
+    hitboxRadius = value -- Atualiza o tamanho da hitbox com base no slider
+    for _, data in pairs(hitboxes) do
+        if data.hitbox then
+            data.hitbox.Size = Vector3.new(hitboxRadius * 2, hitboxRadius * 2, hitboxRadius * 2)
+        end
+        if data.aura then
+            data.aura.Size = Vector3.new(hitboxRadius * 2, hitboxRadius * 2, hitboxRadius * 2)
+        end
+    end
+end)
+
+-- Conectar o toggle para ativar/desativar as hitboxes
+HitboxToggle:OnChanged(function(value)
+    if value then
+        createHitboxForPlayers() -- Criar hitboxes
+    else
+        removeHitboxes() -- Remover hitboxes
     end
 end)
 
