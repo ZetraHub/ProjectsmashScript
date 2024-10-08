@@ -13,9 +13,9 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-    AutoFarm = Window:AddTab({ Title = "▎ AUTO FARM", Icon = "swords" }),
-    Others = Window:AddTab({ Title = "▎ OTHERS", Icon = "scroll" }),
-    Utilities = Window:AddTab({ Title = "▎ UTILITIES", Icon = "star" }),
+    AutoFarm = Window:AddTab({ Title = "▎ COMBAT", Icon = "swords" }),
+    Others = Window:AddTab({ Title = "▎ OTHERS", Icon = "star" }),
+    Utilities = Window:AddTab({ Title = "▎ UTILITIES", Icon = "swords" }),
     Settings = Window:AddTab({ Title = "▎ UI SETTINGS", Icon = "settings" })
 }
 
@@ -30,7 +30,7 @@ do
     })
 
 local Toggle = Tabs.AutoFarm:AddToggle("AutoFarmPlayerToggle", { 
-    Title = "Auto Farm Player", 
+    Title = "Kill Farm (Random Players)", 
     Default = false 
 })
 
@@ -379,6 +379,89 @@ end)
 
 local ESPSection = Tabs.AutoFarm:AddSection("ESP")
 
+local ESPToggle = Tabs.AutoFarm:AddToggle("ESPToggle", { 
+    Title = "Player ESP", 
+    Default = false -- Default como false
+})
+
+local players = game:GetService("Players")
+local localPlayer = players.LocalPlayer
+
+-- Função para criar um ESP para um jogador
+local function createESP(player)
+    if player ~= localPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local espBox = Instance.new("BoxHandleAdornment")
+        espBox.Size = Vector3.new(4, 6, 4) -- Tamanho da caixa de ESP
+        espBox.Adornee = player.Character.HumanoidRootPart
+        espBox.ZIndex = 5
+        espBox.Color3 = Color3.new(1, 0, 0) -- Cor da caixa (vermelho)
+        espBox.AlwaysOnTop = true
+        espBox.Parent = workspace
+        return espBox
+    end
+end
+
+-- Função para remover o ESP de um jogador
+local function removeESP(esp)
+    if esp then
+        esp:Destroy()
+    end
+end
+
+-- Criar ESP para todos os jogadores
+local espBoxes = {}
+
+local function updateESP()
+    for _, player in ipairs(players:GetPlayers()) do
+        if ESPToggle:GetValue() then
+            local esp = createESP(player)
+            if esp then
+                espBoxes[player.UserId] = esp
+            end
+        else
+            if espBoxes[player.UserId] then
+                removeESP(espBoxes[player.UserId])
+                espBoxes[player.UserId] = nil
+            end
+        end
+    end
+end
+
+-- Conectar o toggle para ativar/desativar o ESP
+ESPToggle:OnChanged(function(value)
+    if value then
+        updateESP() -- Ativar ESP para os jogadores
+        -- Atualizar a cada segundo
+        while ESPToggle:GetValue() do
+            wait(1) -- Tempo entre atualizações (ajuste conforme necessário)
+            updateESP()
+        end
+    else
+        for _, esp in pairs(espBoxes) do
+            removeESP(esp)
+        end
+        espBoxes = {} -- Limpar a tabela de ESPs
+    end
+end)
+
+-- Conectar para adicionar novos jogadores
+players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        updateESP()
+    end)
+end)
+
+-- Conectar para remover jogadores
+players.PlayerRemoving:Connect(function(player)
+    if espBoxes[player.UserId] then
+        removeESP(espBoxes[player.UserId])
+        espBoxes[player.UserId] = nil
+    end
+end)
+
+-- Atualizar o ESP na inicialização
+updateESP()
+
 local ESPFarmToggle = Tabs.AutoFarm:AddToggle("ESP", { 
     Title = "Show Name & Distance", 
     Default = false 
@@ -562,7 +645,7 @@ end)
 local EXTRASection = Tabs.AutoFarm:AddSection("EXTRA")
 
 local HitboxToggle = Tabs.AutoFarm:AddToggle("HitboxToggle", { 
-    Title = "Hitbox", 
+    Title = "Hitbox Aura", 
     Default = false 
 })
 
@@ -664,7 +747,7 @@ game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):C
     end
 end)
 
-local AutoDeployToggle = Tabs.Others:AddToggle("AutoDeployToggle", { 
+local AutoDeployToggle = Tabs.AutoFarm:AddToggle("AutoDeployToggle", { 
     Title = "Auto Deploy", 
     Default = true -- Default como true
 })
@@ -674,16 +757,20 @@ local character = player.Character or player.CharacterAdded:Wait()
 
 -- Função para realizar o deploy
 local function deployCharacter()
-    -- Aqui você pode adicionar a lógica para realizar o deploy do personagem
-    -- Exemplo: reposicionar o personagem em uma posição específica
-    character:MoveTo(Vector3.new(0, 10, 0)) -- Altere a posição conforme necessário
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = character.HumanoidRootPart
+        -- Defina uma posição segura para o deploy
+        local safePosition = humanoidRootPart.Position + Vector3.new(0, 5, 0) -- 5 unidades acima da posição atual
+
+        humanoidRootPart.CFrame = CFrame.new(safePosition) -- Mover para a posição segura
+    end
 end
 
 -- Conectar o toggle para ativar/desativar o auto deploy
 AutoDeployToggle:OnChanged(function(value)
     if value then
         deployCharacter() -- Executar a função de deploy ao ativar
-        -- Opcional: você pode usar um loop para deploy contínuo se necessário
+        -- Loop para deploy contínuo
         while AutoDeployToggle:GetValue() do
             wait(1) -- Tempo entre cada deploy (ajuste conforme necessário)
             deployCharacter()
