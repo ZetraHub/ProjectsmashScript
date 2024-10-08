@@ -689,8 +689,7 @@ end
 local AutoAttackButton = Tabs.Info:AddButton({
     Title = "Auto Attack",
     Callback = function()
-        -- Lógica do Auto Attack, se desejado
         print("Auto Attack ativado")
     end,
-    Interactable = false, -- Defina como false se não quiser que seja clicável
+    Interactable = false, -- O botão não é clicável
 })
