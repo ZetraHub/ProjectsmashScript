@@ -250,6 +250,29 @@ Fluent:Notify({
     Duration = 8
 })
 
+local InvisibilityToggle = Tabs.Others:AddToggle("InvisibilityToggle", { 
+    Title = "Invisibility", 
+    Default = false 
+})
+
+local function SetInvisibility(enabled)
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+
+    for _, part in pairs(character:GetChildren()) do
+        if part:IsA("BasePart") or part:IsA("MeshPart") then
+            part.Transparency = enabled and 1 or 0 -- Torna o personagem invisível (1) ou visível (0)
+            part.CanCollide = not enabled -- Desativa colisão quando invisível
+        elseif part:IsA("Accessory") then
+            part.Handle.Transparency = enabled and 1 or 0 -- Torna acessórios invisíveis
+        end
+    end
+end
+
+InvisibilityToggle:OnChanged(function()
+    SetInvisibility(InvisibilityToggle.Value)
+end)
+
 local AntiAFKToggle = Tabs.Others:AddToggle("AntiAFKToggle", {
     Title = "Anti AFK",
     Default = true -- Default como true
@@ -286,31 +309,6 @@ end)
 if AntiAFKEnabled then
     spawn(AntiAFK)
 end
-
-local InvisibilityToggle = Tabs.Others:AddToggle("InvisibilityToggle", { 
-    Title = "Invisibility", 
-    Default = false 
-})
-
-local function SetInvisibility(enabled)
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-
-    for _, part in pairs(character:GetChildren()) do
-        if part:IsA("BasePart") or part:IsA("MeshPart") then
-            part.Transparency = enabled and 1 or 0 -- Torna o personagem invisível (1) ou visível (0)
-            part.CanCollide = not enabled -- Desativa colisão quando invisível
-        elseif part:IsA("Accessory") then
-            part.Handle.Transparency = enabled and 1 or 0 -- Torna acessórios invisíveis
-        end
-    end
-end
-
-InvisibilityToggle:OnChanged(function()
-    SetInvisibility(InvisibilityToggle.Value)
-end)
-
-Options.AntiAFKToggle:SetValue(false)
 
 -- Adiciona um Toggle (interruptor) para Anti Fling
 local FlingToggle = Tabs.AutoFarm:AddToggle("AntiFlingToggle", { 
