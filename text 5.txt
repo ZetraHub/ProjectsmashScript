@@ -686,7 +686,7 @@ if AntiAFKEnabled then
     spawn(AntiAFK)
 end
 
-local AutoAttackButton = Tabs.Combat:AddButton({
+local AutoAttackButton = Tabs.Info:AddButton({
     Title = "Auto Attack",
     Callback = function()
         -- Lógica do Auto Attack, se desejado
