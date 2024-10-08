@@ -1,4 +1,4 @@
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/ZetraHub/ProjectsmashScript/refs/heads/main/text%205.txt"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
@@ -538,9 +538,10 @@ local HitboxToggle = Tabs.AutoFarm:AddToggle("HitboxToggle", {
 local hitboxes = {} -- Tabela para armazenar as hitboxes de outros jogadores
 local player = game.Players.LocalPlayer
 local hitboxRadius = 10 -- Raio da hitbox
-local auraColor = Color3.new(1, 0, 0) -- Cor da aura (vermelho)
+local auraColor = Color3.new(1, 1, 1) -- Cor da aura branca
+local auraTransparency = 0.8 -- Transparência da aura (0 = opaco, 1 = completamente invisível)
 
--- Função para criar hitbox e aura redonda
+-- Função para criar hitbox e aura translúcida para um jogador
 local function createHitboxAndAuraForPlayer(targetPlayer)
     local character = targetPlayer.Character
     if character and character:FindFirstChild("HumanoidRootPart") then
@@ -554,16 +555,16 @@ local function createHitboxAndAuraForPlayer(targetPlayer)
         hitbox.Transparency = 1 -- Tornar invisível
         hitbox.Parent = workspace
 
-        -- Criar a aura
+        -- Criar a aura branca translúcida
         local aura = Instance.new("Part")
         aura.Shape = Enum.PartType.Ball -- Torna a aura redonda
         aura.Size = Vector3.new(hitboxRadius * 2, hitboxRadius * 2, hitboxRadius * 2)
         aura.Position = hitbox.Position
         aura.Anchored = true
         aura.CanCollide = false
-        aura.BrickColor = BrickColor.new(auraColor)
-        aura.Material = Enum.Material.Neon
-        aura.Transparency = 0.7 -- Transparência mais alta, mas ainda visível
+        aura.BrickColor = BrickColor.White() -- Cor branca
+        aura.Material = Enum.Material.Neon -- Material Neon para dar brilho suave
+        aura.Transparency = auraTransparency -- Definir a transparência
         aura.Parent = workspace
 
         -- Atualizar a posição da hitbox e da aura
