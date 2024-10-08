@@ -34,28 +34,23 @@ local Toggle = Tabs.AutoFarm:AddToggle("AutoFarmPlayerToggle", {
     Default = false 
 })
 
+local AntiFallToggle = Tabs.AutoFarm:AddToggle("AntiFallToggle", { 
+    Title = "Anti Fall", 
+    Default = false 
+})
+
 local antiFallConnection  -- Variável para armazenar a conexão do Anti Fall
 
-AntiFallToggle:OnChanged(function()
-    if AntiFallToggle.Value then
-        -- Ativa o Anti Fall
-        antiFallConnection = game:GetService("RunService").Stepped:Connect(function()
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+-- Ativa o Anti Fall
+antiFallConnection = game:GetService("RunService").Stepped:Connect(function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
 
-            if humanoidRootPart then
-                -- Verifica se o personagem está caindo
-                if humanoidRootPart.Velocity.Y < -10 then  -- Se a velocidade vertical for negativa (caindo)
-                    humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 50, humanoidRootPart.Position.Z)  -- Teleporta o jogador de volta para uma altura segura
-                end
-            end
-        end)
-    else
-        -- Desativa o Anti Fall
-        if antiFallConnection then
-            antiFallConnection:Disconnect()
-            antiFallConnection = nil
+    if humanoidRootPart then
+        -- Verifica se o personagem está caindo
+        if humanoidRootPart.Velocity.Y < -10 then  -- Se a velocidade vertical for negativa (caindo)
+            humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 50, humanoidRootPart.Position.Z)  -- Teleporta o jogador de volta para uma altura segura
         end
     end
 end)
