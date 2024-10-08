@@ -538,9 +538,9 @@ local HitboxToggle = Tabs.AutoFarm:AddToggle("HitboxToggle", {
 local hitboxes = {} -- Tabela para armazenar as hitboxes de outros jogadores
 local player = game.Players.LocalPlayer
 local hitboxRadius = 10 -- Raio da hitbox
-local auraTransparency = 0.8 -- Transparência da aura (0 = opaco, 1 = completamente invisível)
+local auraTransparency = 0.5 -- Transparência da aura (0 = opaco, 1 = completamente invisível)
 
--- Função para criar hitbox e aura transparente para um jogador
+-- Função para criar hitbox e aura para um jogador
 local function createHitboxAndAuraForPlayer(targetPlayer)
     local character = targetPlayer.Character
     if character and character:FindFirstChild("HumanoidRootPart") then
@@ -554,15 +554,15 @@ local function createHitboxAndAuraForPlayer(targetPlayer)
         hitbox.Transparency = 1 -- Tornar invisível
         hitbox.Parent = workspace
 
-        -- Criar a aura transparente
+        -- Criar a aura visível
         local aura = Instance.new("Part")
         aura.Shape = Enum.PartType.Ball -- Torna a aura redonda
         aura.Size = Vector3.new(hitboxRadius * 2, hitboxRadius * 2, hitboxRadius * 2)
         aura.Position = hitbox.Position
         aura.Anchored = true
         aura.CanCollide = false
-        aura.BrickColor = BrickColor.new(1, 1, 1) -- Cor branca
-        aura.Material = Enum.Material.Neon -- Material Neon
+        aura.BrickColor = BrickColor.White() -- Cor branca
+        aura.Material = Enum.Material.Neon -- Material Neon para dar brilho suave
         aura.Transparency = auraTransparency -- Definir a transparência
         aura.Parent = workspace
 
@@ -606,7 +606,7 @@ end
 
 -- Função para remover todas as hitboxes
 local function removeAllHitboxes()
-    for _, targetPlayer in pairs(hitboxes) do
+    for targetPlayer in pairs(hitboxes) do
         removeHitboxAndAuraForPlayer(targetPlayer)
     end
 end
