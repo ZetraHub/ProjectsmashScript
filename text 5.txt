@@ -315,6 +315,38 @@ game:GetService("RunService").Heartbeat:Connect(function()
     end
 end)
 
+local Toggle = Tabs.Combat:AddToggle("AutoAttackToggle", { 
+    Title = "Auto Attack (Melee)", 
+    Default = false 
+})
+
+local meleeButton = game.Players.LocalPlayer.PlayerGui:WaitForChild("SeuGUI"):WaitForChild("Melee") -- Substitua "SeuGUI" pelo nome correto da sua GUI
+
+-- Função para atacar aleatoriamente jogadores
+local function atacarJogadoresAleatorios()
+    while Toggle.Value do
+        wait(1) -- Ajuste o tempo entre os ataques conforme necessário
+        local players = game.Players:GetPlayers()
+        
+        for _, player in ipairs(players) do
+            if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") then
+                -- Simula o clique no botão "Melee"
+                meleeButton.MouseButton1Click:Fire() -- Chama o evento do botão Melee
+                print("Atacando: " .. player.Name)
+                wait(0.5) -- Aguarda um pequeno tempo antes de atacar novamente
+            end
+        end
+    end
+end
+
+-- Conecta a função ao toggle
+Toggle:OnChanged(function(newValue)
+    if newValue then
+        print("Auto Attack Ativado!")
+        atacarJogadoresAleatorios()
+    end
+end)
+
 local ESPSection = Tabs.Combat:AddSection("ESP")
 
 local ESPFarmToggle = Tabs.Combat:AddToggle("ESP", { 
@@ -684,35 +716,3 @@ end)
 if AntiAFKEnabled then
     spawn(AntiAFK)
 end
-
-local Toggle = Tabs.Combat:AddToggle("AutoAttackToggle", { 
-    Title = "Auto Attack (Melee)", 
-    Default = false 
-})
-
-local meleeButton = game.Players.LocalPlayer.PlayerGui:WaitForChild("SeuGUI"):WaitForChild("Melee") -- Substitua "SeuGUI" pelo nome correto da sua GUI
-
--- Função para atacar aleatoriamente jogadores
-local function atacarJogadoresAleatorios()
-    while Toggle.Value do
-        wait(1) -- Ajuste o tempo entre os ataques conforme necessário
-        local players = game.Players:GetPlayers()
-        
-        for _, player in ipairs(players) do
-            if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") then
-                -- Simula o clique no botão "Melee"
-                meleeButton.MouseButton1Click:Fire() -- Chama o evento do botão Melee
-                print("Atacando: " .. player.Name)
-                wait(0.5) -- Aguarda um pequeno tempo antes de atacar novamente
-            end
-        end
-    end
-end
-
--- Conecta a função ao toggle
-Toggle:OnChanged(function(newValue)
-    if newValue then
-        print("Auto Attack Ativado!")
-        atacarJogadoresAleatorios()
-    end
-end)
