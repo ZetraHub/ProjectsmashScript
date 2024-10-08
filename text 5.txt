@@ -13,10 +13,9 @@ local Window = Fluent:CreateWindow({
 })
 
 local Tabs = {
-     Info = Window:AddTab({ Title = "▎ INFO", Icon = "scroll" }),
     Combat = Window:AddTab({ Title = "▎ COMBAT", Icon = "swords" }),
     Others = Window:AddTab({ Title = "▎ OTHERS", Icon = "star" }),
-    Utilities = Window:AddTab({ Title = "▎ UTILITIES", Icon = "target" }),
+    Utilities = Window:AddTab({ Title = "▎ UTILITIES", Icon = "toolbox" }),
     Settings = Window:AddTab({ Title = "▎ UI SETTINGS", Icon = "settings" })
 }
 
@@ -685,8 +684,3 @@ end)
 if AntiAFKEnabled then
     spawn(AntiAFK)
 end
-
-local AntiAFKToggle = Tabs.Info:AddToggle("AntiAFKToggle", {
-    Title = "Anti AFK",
-    Default = false
-})
