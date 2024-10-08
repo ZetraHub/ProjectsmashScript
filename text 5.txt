@@ -650,6 +650,8 @@ local AutoDeployToggle = Tabs.AutoFarm:AddToggle("AutoDeployToggle", {
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 
+local autoDeployActive = false -- Variável de controle
+
 -- Função para realizar o deploy
 local function deployCharacter()
     if character and character:FindFirstChild("HumanoidRootPart") then
@@ -661,15 +663,20 @@ local function deployCharacter()
     end
 end
 
+-- Função para o loop contínuo
+local function autoDeployLoop()
+    while autoDeployActive do
+        deployCharacter()
+        wait(1) -- Tempo entre cada deploy (ajuste conforme necessário)
+    end
+end
+
 -- Conectar o toggle para ativar/desativar o auto deploy
 AutoDeployToggle:OnChanged(function(value)
-    if value then
-        deployCharacter() -- Executar a função de deploy ao ativar
-        -- Loop para deploy contínuo
-        while AutoDeployToggle:GetValue() do
-            wait(1) -- Tempo entre cada deploy (ajuste conforme necessário)
-            deployCharacter()
-        end
+    autoDeployActive = value -- Atualiza a variável de controle
+    if autoDeployActive then
+        -- Inicia o loop de deploy contínuo em uma nova thread
+        spawn(autoDeployLoop)
     end
 end)
 
