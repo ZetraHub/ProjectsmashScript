@@ -686,10 +686,7 @@ if AntiAFKEnabled then
     spawn(AntiAFK)
 end
 
-local AutoAttackButton = Tabs.Info:AddButton({
-    Title = "Auto Attack",
-    Callback = function()
-        print("Auto Attack ativado")
-    end,
-    Interactable = false, -- O botão não é clicável
+local AntiAFKToggle = Tabs.Info:AddToggle("AntiAFKToggle", {
+    Title = "Anti AFK",
+    Default = false
 })
