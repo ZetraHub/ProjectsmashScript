@@ -39,21 +39,43 @@ local AntiFallToggle = Tabs.AutoFarm:AddToggle("AntiFallToggle", {
     Default = false 
 })
 
+local antiFallEnabled = false  -- Inicializa o Anti Fall como desativado
 local antiFallConnection  -- Variável para armazenar a conexão do Anti Fall
 
--- Ativa o Anti Fall
-antiFallConnection = game:GetService("RunService").Stepped:Connect(function()
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+-- Função para ativar o Anti Fall
+local function activateAntiFall()
+    if not antiFallConnection then
+        antiFallConnection = game:GetService("RunService").Stepped:Connect(function()
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
 
-    if humanoidRootPart then
-        -- Verifica se o personagem está caindo
-        if humanoidRootPart.Velocity.Y < -10 then  -- Se a velocidade vertical for negativa (caindo)
-            humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, 50, humanoidRootPart.Position.Z)  -- Teleporta o jogador de volta para uma altura segura
-        end
+            if humanoidRootPart then
+                -- Verifica se o personagem está caindo
+                if humanoidRootPart.Velocity.Y < -10 then  -- Se a velocidade vertical for negativa (caindo)
+                    humanoidRootPart.CFrame = CFrame.new(humanoidRootPart.Position.X, math.max(humanoidRootPart.Position.Y, 0), humanoidRootPart.Position.Z)  -- Mantém a altura atual ou ajusta para zero
+                end
+            end
+        end)
     end
-end)
+end
+
+-- Função para desativar o Anti Fall
+local function deactivateAntiFall()
+    if antiFallConnection then
+        antiFallConnection:Disconnect()
+        antiFallConnection = nil
+    end
+end
+
+-- Aqui você pode ativar ou desativar o Anti Fall conforme necessário
+-- Exemplo: Ativar o Anti Fall
+antiFallEnabled = true
+if antiFallEnabled then
+    activateAntiFall()
+else
+    deactivateAntiFall()
+end
 
 local AutoFarmEnabled = false
 local currentTarget = nil
