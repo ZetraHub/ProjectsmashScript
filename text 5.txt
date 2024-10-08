@@ -663,3 +663,30 @@ game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal("Health"):C
         end
     end
 end)
+
+local AutoDeployToggle = Tabs.Others:AddToggle("AutoDeployToggle", { 
+    Title = "Auto Deploy", 
+    Default = true -- Default como true
+})
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Função para realizar o deploy
+local function deployCharacter()
+    -- Aqui você pode adicionar a lógica para realizar o deploy do personagem
+    -- Exemplo: reposicionar o personagem em uma posição específica
+    character:MoveTo(Vector3.new(0, 10, 0)) -- Altere a posição conforme necessário
+end
+
+-- Conectar o toggle para ativar/desativar o auto deploy
+AutoDeployToggle:OnChanged(function(value)
+    if value then
+        deployCharacter() -- Executar a função de deploy ao ativar
+        -- Opcional: você pode usar um loop para deploy contínuo se necessário
+        while AutoDeployToggle:GetValue() do
+            wait(1) -- Tempo entre cada deploy (ajuste conforme necessário)
+            deployCharacter()
+        end
+    end
+end)
