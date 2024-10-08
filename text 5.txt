@@ -321,8 +321,7 @@ FlingToggle:OnChanged(function()
     if FlingToggle.Value then
         if humanoidRootPart then
             -- Previne mudanças repentinas na velocidade que possam indicar um fling
-            humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)  -- Define propriedades físicas
-            humanoidRootPart.Velocity = Vector3.new(0, 0, 0)  -- Reseta a velocidade
+            humanoidRootPart.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0) -- Definindo propriedades físicas
         end
     else
         if humanoidRootPart then
@@ -339,9 +338,10 @@ game:GetService("RunService").Heartbeat:Connect(function()
         local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
         
         if humanoidRootPart then
-            -- Se a velocidade do jogador for muito alta, resete-a
-            if humanoidRootPart.Velocity.Magnitude > 50 then  -- Ajuste o valor conforme necessário
-                humanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+            -- Limitar a velocidade do HumanoidRootPart para evitar fling
+            local maxSpeed = 50 -- Ajuste o valor conforme necessário
+            if humanoidRootPart.Velocity.Magnitude > maxSpeed then
+                humanoidRootPart.Velocity = humanoidRootPart.Velocity.Unit * maxSpeed
             end
         end
     end
