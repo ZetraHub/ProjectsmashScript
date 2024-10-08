@@ -273,42 +273,7 @@ InvisibilityToggle:OnChanged(function()
     SetInvisibility(InvisibilityToggle.Value)
 end)
 
-local AntiAFKToggle = Tabs.Others:AddToggle("AntiAFKToggle", {
-    Title = "Anti AFK",
-    Default = true -- Default como true
-})
 
-local AntiAFKEnabled = AntiAFKToggle:GetValue()  -- Pega o valor inicial do toggle (inicialmente true)
-local virtualUser = game:GetService("VirtualUser")
-
-local function AntiAFK()
-    while AntiAFKEnabled do
-        virtualUser:CaptureController()
-        virtualUser:ClickButton2(Vector2.new())  -- Simula clique direito do mouse
-        wait(60)  -- Intervalo fixo para simular atividade
-    end
-end
-
-AntiAFKToggle:OnChanged(function(value)
-    AntiAFKEnabled = value
-
-    if AntiAFKEnabled then
-        -- Conecte o evento quando o jogador for detectado como inativo
-        game:GetService("Players").LocalPlayer.Idled:Connect(function()
-            virtualUser:CaptureController()
-            virtualUser:ClickButton2(Vector2.new())
-        end)
-
-        spawn(AntiAFK)  -- Inicia o Anti AFK em uma nova thread
-    else
-        print("Anti AFK desativado.")
-    end
-end)
-
--- Iniciar o Anti AFK automaticamente se o toggle estiver ativado
-if AntiAFKEnabled then
-    spawn(AntiAFK)
-end
 
 -- Adiciona um Toggle (interruptor) para Anti Fling
 local FlingToggle = Tabs.AutoFarm:AddToggle("AntiFlingToggle", { 
@@ -683,30 +648,39 @@ AutoDeployToggle:OnChanged(function(value)
     end
 end)
 
-local InfiniteJumpToggle = Tabs.Others:AddToggle("InfiniteJumpToggle", { 
-    Title = "Infinite Jump", 
-    Default = false 
+local AntiAFKToggle = Tabs.Others:AddToggle("AntiAFKToggle", {
+    Title = "Anti AFK",
+    Default = true -- Default como true
 })
 
-local player = game.Players.LocalPlayer
-local userInputService = game:GetService("UserInputService")
+local AntiAFKEnabled = AntiAFKToggle:GetValue()  -- Pega o valor inicial do toggle (inicialmente true)
+local virtualUser = game:GetService("VirtualUser")
 
--- Função para ativar o Infinite Jump
-local function enableInfiniteJump()
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:WaitForChild("Humanoid")
-
-    -- Conectar ao evento de input do jogador
-    userInputService.JumpRequest:Connect(function()
-        if InfiniteJumpToggle.Value then
-            humanoid:ChangeState(Enum.HumanoidStateType.Jumping) -- Faz o personagem pular
-        end
-    end)
+local function AntiAFK()
+    while AntiAFKEnabled do
+        virtualUser:CaptureController()
+        virtualUser:ClickButton2(Vector2.new())  -- Simula clique direito do mouse
+        wait(60)  -- Intervalo fixo para simular atividade
+    end
 end
 
--- Conectar o toggle para ativar/desativar o Infinite Jump
-InfiniteJumpToggle:OnChanged(function(value)
-    if value then
-        enableInfiniteJump() -- Ativar Infinite Jump
+AntiAFKToggle:OnChanged(function(value)
+    AntiAFKEnabled = value
+
+    if AntiAFKEnabled then
+        -- Conecte o evento quando o jogador for detectado como inativo
+        game:GetService("Players").LocalPlayer.Idled:Connect(function()
+            virtualUser:CaptureController()
+            virtualUser:ClickButton2(Vector2.new())
+        end)
+
+        spawn(AntiAFK)  -- Inicia o Anti AFK em uma nova thread
+    else
+        print("Anti AFK desativado.")
     end
 end)
+
+-- Iniciar o Anti AFK automaticamente se o toggle estiver ativado
+if AntiAFKEnabled then
+    spawn(AntiAFK)
+end
