@@ -559,7 +559,8 @@ local function createHitboxAndAura()
     aura.Position = hitbox.Position
     aura.Anchored = true
     aura.CanCollide = false
-    aura.BrickColor = BrickColor.new(auraColor)
+    aura.BrickColor = BrickColor.new(auraColor) -- Aqui pode gerar erro
+    aura.Color = auraColor -- Defina a cor corretamente
     aura.Material = Enum.Material.Neon
     aura.Transparency = 0.5 -- Transparência da aura
     aura.Parent = workspace
@@ -573,7 +574,15 @@ local function createHitboxAndAura()
     end
 
     -- Conectar a atualização de posição ao evento Heartbeat
-    game:GetService("RunService").Heartbeat:Connect(updateHitboxPosition)
+    local heartbeatConnection
+    heartbeatConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        updateHitboxPosition()
+        
+        -- Verificar se a hitbox ainda existe, se não, desconectar
+        if not hitbox or not hitbox:IsDescendantOf(workspace) then
+            heartbeatConnection:Disconnect()
+        end
+    end)
 
     -- Detectar quando algo entra na hitbox
     hitbox.Touched:Connect(function(hit)
