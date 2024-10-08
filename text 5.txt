@@ -664,3 +664,31 @@ AutoDeployToggle:OnChanged(function(value)
         end
     end
 end)
+
+local InfiniteJumpToggle = Tabs.Others:AddToggle("InfiniteJumpToggle", { 
+    Title = "Infinite Jump", 
+    Default = false 
+})
+
+local player = game.Players.LocalPlayer
+local userInputService = game:GetService("UserInputService")
+
+-- Função para ativar o Infinite Jump
+local function enableInfiniteJump()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+
+    -- Conectar ao evento de input do jogador
+    userInputService.JumpRequest:Connect(function()
+        if InfiniteJumpToggle.Value then
+            humanoid:ChangeState(Enum.HumanoidStateType.Jumping) -- Faz o personagem pular
+        end
+    end)
+end
+
+-- Conectar o toggle para ativar/desativar o Infinite Jump
+InfiniteJumpToggle:OnChanged(function(value)
+    if value then
+        enableInfiniteJump() -- Ativar Infinite Jump
+    end
+end)
