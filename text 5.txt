@@ -50,7 +50,7 @@ local function TeleportToPlayerBack(targetPlayer)
             local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
             if humanoidRootPart then
                 -- Teleporte para uma posição atrás do jogador e ligeiramente elevado
-                local behindPosition = targetPosition - (targetLookVector * 3) + Vector3.new(0, 2, 0)
+                local behindPosition = targetPosition - (targetLookVector * 2) + Vector3.new(0, 2, 0)
                 humanoidRootPart.CFrame = CFrame.new(behindPosition)
             end
         end
