@@ -250,12 +250,12 @@ Fluent:Notify({
     Duration = 8
 })
 
-local AntiAFKToggle = Tabs.AutoFarm:AddToggle("AntiAFKToggle", {
+local AntiAFKToggle = Tabs.Others:AddToggle("AntiAFKToggle", {
     Title = "Anti AFK",
-    Default = true
+    Default = true -- Default como true
 })
 
-local AntiAFKEnabled = true  -- Inicialmente ativado
+local AntiAFKEnabled = AntiAFKToggle:GetValue()  -- Pega o valor inicial do toggle (inicialmente true)
 local virtualUser = game:GetService("VirtualUser")
 
 local function AntiAFK()
@@ -266,8 +266,8 @@ local function AntiAFK()
     end
 end
 
-AntiAFKToggle:OnChanged(function()
-    AntiAFKEnabled = Options.AntiAFKToggle.Value
+AntiAFKToggle:OnChanged(function(value)
+    AntiAFKEnabled = value
 
     if AntiAFKEnabled then
         -- Conecte o evento quando o jogador for detectado como inativo
@@ -281,6 +281,11 @@ AntiAFKToggle:OnChanged(function()
         print("Anti AFK desativado.")
     end
 end)
+
+-- Iniciar o Anti AFK automaticamente se o toggle estiver ativado
+if AntiAFKEnabled then
+    spawn(AntiAFK)
+end
 
 local InvisibilityToggle = Tabs.Others:AddToggle("InvisibilityToggle", { 
     Title = "Invisibility", 
@@ -644,7 +649,7 @@ end)
 
 local AutoDeployToggle = Tabs.AutoFarm:AddToggle("AutoDeployToggle", { 
     Title = "Auto Deploy", 
-    Default = true -- Default como true
+    Default = false -- Default como true
 })
 
 local player = game.Players.LocalPlayer
