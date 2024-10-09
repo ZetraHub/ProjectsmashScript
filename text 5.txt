@@ -653,11 +653,6 @@ local AntiAFKToggle = Tabs.Others:AddToggle("AntiAFKToggle", {
     Default = true -- Default como true
 })
 
-local AntiAFKToggle = Tabs.Others:AddToggle("AntiAFKToggle", {
-    Title = "Anti AFK",
-    Default = true -- Default como true
-})
-
 local AntiAFKEnabled = AntiAFKToggle:GetValue()  -- Pega o valor inicial do toggle (inicialmente true)
 local virtualUser = game:GetService("VirtualUser")
 
